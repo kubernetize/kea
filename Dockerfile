@@ -3,7 +3,7 @@ FROM alpine:3.11
 LABEL maintainer="Richard Kojedzinszky"
 
 RUN adduser -u 27489 -D -H kea && \
-    apk --no-cache add kea-admin kea-dhcp4 && \
+    apk --no-cache add kea-admin kea-dhcp4 postgresql-client && \
     mkdir /run/kea && chown kea:kea /run/kea && \
     # fix kea installation
     ln -s kea/scripts /usr/share/kea/scripts
