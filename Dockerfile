@@ -1,6 +1,9 @@
 FROM alpine:3.11
 
-LABEL maintainer="Richard Kojedzinszky"
+LABEL \
+    org.opencontainers.image.authors="Richard Kojedzinszky <richard@kojedz.in>" \
+    org.opencontainers.image.title="ISC KEA dhcp server" \
+    org.opencontainers.image.description="ISC KEA dhcp server"
 
 RUN adduser -u 27489 -D -H kea && \
     apk --no-cache add kea-admin kea-dhcp4 postgresql-client && \
