@@ -13,6 +13,6 @@ RUN adduser -u 27489 -D -H kea && \
 
 USER 27489
 
-EXPOSE 1667/udp
+EXPOSE 67/udp
 
-CMD ["/usr/sbin/kea-dhcp4", "-c", "/etc/kea/kea-dhcp4.conf", "-p", "1667"]
+CMD ["/usr/sbin/kea-dhcp4", "-c", "/etc/kea/kea-dhcp4.conf"]
