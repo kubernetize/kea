@@ -6,11 +6,12 @@ tags:
 {{/each}}
 {{/if}}
 manifests:
-- image: rkojedzinszky/kea:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}arm64
+- image: rkojedzinszky/kea:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}arm64v8
   platform:
-    architecture: arm64
     os: linux
+    architecture: arm64
+    variant: v8
 - image: rkojedzinszky/kea:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}amd64
   platform:
-    architecture: amd64
     os: linux
+    architecture: amd64
