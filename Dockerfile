@@ -3,7 +3,8 @@ FROM debian:buster-slim AS base
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends liblog4cplus-1.1-9 libssl1.1 \
-        libboost-system1.67.0 postgresql-client default-mysql-client && \
+        libboost-system1.67.0 libpq5 libmariadb3 \
+        postgresql-client default-mysql-client && \
     rm -rf /var/lib/apt/* /var/cache/apt/*
 
 FROM base AS build
