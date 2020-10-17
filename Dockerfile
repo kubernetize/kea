@@ -54,5 +54,3 @@ RUN useradd -u 27489 -M kea && \
 USER 27489
 
 EXPOSE 67/udp
-
-CMD ["/usr/local/sbin/kea-dhcp4", "-c", "/etc/kea/kea-dhcp4.conf"]
