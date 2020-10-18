@@ -1,0 +1,75 @@
+#!/bin/sh
+
+KEA_CONF=/etc/kea/kea-dhcp4.conf
+if [ -n "$1" ]; then
+	KEA_CONF="$1"
+fi
+
+if [ ! -f "$KEA_CONF" ]; then
+	echo "[-] Kea config ($KEA_CONF) could not be read."
+	exit 1
+fi
+
+kea_admin_args=
+parse_db_args()
+{
+	local conf="$1"
+	local db="$(jq '[.[]."hosts-database"][0]' "$conf")"
+
+	local type=$(echo "$db" | jq -r ".type")
+	case "$type" in
+	postgresql)
+		kea_admin_args="pgsql"
+		;;
+	mysql)
+		kea_admin_args="mysql"
+		;;
+	*)
+		echo "[-] Database type '$type' not supported."
+		exit 2
+		;;
+	esac
+
+	local host=$(echo "$db" | jq -r ".host")
+	if [ -n "$host" ]; then
+		kea_admin_args="$kea_admin_args -h $host"
+	fi
+
+	local name=$(echo "$db" | jq -r ".name")
+	if [ -n "$name" ]; then
+		kea_admin_args="$kea_admin_args -n $name"
+	fi
+
+	local user=$(echo "$db" | jq -r ".user")
+	if [ -n "$user" ]; then
+		kea_admin_args="$kea_admin_args -u $user"
+	fi
+
+	local password=$(echo "$db" | jq -r ".password")
+	if [ -n "$password" ]; then
+		kea_admin_args="$kea_admin_args -p $password"
+	fi
+}
+
+parse_db_args "$KEA_CONF"
+
+dbver=$(kea-admin db-version $kea_admin_args 2>/dev/null)
+if [ -z "$dbver" ]; then
+	echo "[-] No database version found, initializing..."
+	kea-admin db-init $kea_admin_args
+	if [ $? -eq 0 ]; then
+		echo "[+] Database has been initialized."
+	else
+		echo "[-] Database initialization failed."
+		exit 3
+	fi
+else
+	echo "[+] Found database with version $dbver. Upgrading..."
+	kea-admin db-upgrade $kea_admin_args
+	if [ $? -eq 0 ]; then
+		echo "[+] Database has been upgraded."
+	else
+		echo "[-] Database upgrade failed."
+		exit 4
+	fi
+fi

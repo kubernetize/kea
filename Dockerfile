@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends liblog4cplus-1.1-9 libssl1.1 \
         libboost-system1.67.0 libpq5 libmariadb3 \
-        postgresql-client default-mysql-client && \
+        postgresql-client default-mysql-client jq && \
     rm -rf /var/lib/apt/* /var/cache/apt/*
 
 FROM base AS build
@@ -50,6 +50,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends libcap2-bin && 
 
 RUN useradd -u 27489 -M kea && \
     mkdir /var/lib/kea /var/run/kea && chown kea:kea /var/lib/kea /var/run/kea
+
+ADD assets/ /
 
 USER 27489
 
