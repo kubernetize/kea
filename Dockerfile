@@ -24,7 +24,7 @@ RUN autoreconf --install && \
     CFLAGS=-O2 CXXFLAGS=-O2 ./configure --enable-static=no --disable-dependency-tracking \
         --sysconfdir=/etc --localstatedir=/var \
         --with-pgsql --with-mysql=/usr/bin/mariadb_config && \
-    make -j2 && make install
+    make && make install
 
 RUN rm -rf /usr/local/include/* && \
     rm -f /usr/local/lib/*.la /usr/local/lib/kea/hooks/*.la && \
