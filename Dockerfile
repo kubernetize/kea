@@ -9,7 +9,7 @@ RUN apt-get update && \
 
 FROM base AS build
 
-ENV KEA_VERSION 1.8.0
+ENV KEA_VERSION 1.8.2
 
 RUN apt-get update && \
     apt-get install -y make g++ automake libtool libssl-dev \
