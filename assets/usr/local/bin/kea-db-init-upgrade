@@ -1,6 +1,7 @@
 #!/bin/sh
 
-KEA_CONF=/etc/kea/kea-dhcp4.conf
+: ${KEA_CONF=/etc/kea/kea-dhcp4.conf}
+
 if [ -n "$1" ]; then
 	KEA_CONF="$1"
 fi
