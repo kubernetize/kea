@@ -1,58 +1,17 @@
-FROM debian:buster-slim AS base
-
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends liblog4cplus-1.1-9 libssl1.1 \
-        libboost-system1.67.0 libpq5 libmariadb3 \
-        postgresql-client default-mysql-client jq && \
-    rm -rf /var/lib/apt/* /var/cache/apt/*
-
-FROM base AS build
-
-ENV KEA_VERSION 1.8.2
-
-RUN apt-get update && \
-    apt-get install -y make clang automake libtool libssl-dev \
-        libboost-system-dev libboost-dev liblog4cplus-dev \
-        postgresql-server-dev-11 libmariadb-dev curl && \
-	update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 && \
-	update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100 && \
-    mkdir /kea && \
-    curl -sL https://github.com/isc-projects/kea/archive/Kea-${KEA_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /kea
-
-WORKDIR /kea
-
-RUN autoreconf --install && \
-    CC=cc CXX=c++ CFLAGS=-O2 CXXFLAGS=-O2 ./configure --enable-static=no --disable-dependency-tracking \
-        --sysconfdir=/etc --localstatedir=/var \
-        --with-pgsql --with-mysql=/usr/bin/mariadb_config && \
-    make -j2 && \
-    make install
-
-RUN rm -rf /usr/local/include/* && \
-    rm -f /usr/local/lib/*.la /usr/local/lib/kea/hooks/*.la && \
-    find /usr/local/lib/ -name '*.so' -print0 | xargs -r0 strip -s && \
-    strip -s /usr/local/sbin/* || true
-
-FROM base
+FROM alpine:3.13.4
 
 LABEL \
     org.opencontainers.image.authors="Richard Kojedzinszky <richard@kojedz.in>" \
     org.opencontainers.image.title="ISC KEA dhcp server" \
     org.opencontainers.image.description="ISC KEA dhcp server"
 
-
-COPY --from=build /usr/local /usr/local
-COPY --from=build /etc/kea /etc/kea
-
-RUN apt-get update && apt-get install -y --no-install-recommends libcap2-bin && \
-    setcap cap_net_bind_service,cap_net_raw=+ep /usr/local/sbin/kea-dhcp4 && \
-    setcap cap_net_bind_service=+ep /usr/local/sbin/kea-dhcp6 && \
-    apt-get remove -y --autoremove --purge libcap2-bin && \
-    rm -rf /var/lib/apt/* /var/cache/apt/*
-
-RUN useradd -u 27489 -M kea && \
-    mkdir /var/lib/kea /var/run/kea && chown kea:kea /var/lib/kea /var/run/kea
+RUN adduser -u 27489 -D -H kea && \
+    mkdir /var/lib/kea /var/run/kea && chown kea:kea /var/lib/kea /var/run/kea && \
+    apk --no-cache add jq kea-dhcp4 kea-dhcp6 kea-admin postgresql-client mariadb-client && \
+    apk --no-cache add -t cap libcap && \
+    setcap cap_net_bind_service,cap_net_raw=+ep /usr/sbin/kea-dhcp4 && \
+    setcap cap_net_bind_service=+ep /usr/sbin/kea-dhcp6 && \
+    apk --no-cache del cap
 
 ADD assets/ /
 
