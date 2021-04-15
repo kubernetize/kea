@@ -12,16 +12,18 @@ FROM base AS build
 ENV KEA_VERSION 1.8.2
 
 RUN apt-get update && \
-    apt-get install -y make g++ automake libtool libssl-dev \
+    apt-get install -y make clang automake libtool libssl-dev \
         libboost-system-dev libboost-dev liblog4cplus-dev \
         postgresql-server-dev-11 libmariadb-dev curl && \
+	update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 && \
+	update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100 && \
     mkdir /kea && \
     curl -sL https://github.com/isc-projects/kea/archive/Kea-${KEA_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /kea
 
 WORKDIR /kea
 
 RUN autoreconf --install && \
-    CFLAGS=-O2 CXXFLAGS=-O2 ./configure --enable-static=no --disable-dependency-tracking \
+    CC=cc CXX=c++ CFLAGS=-O2 CXXFLAGS=-O2 ./configure --enable-static=no --disable-dependency-tracking \
         --sysconfdir=/etc --localstatedir=/var \
         --with-pgsql --with-mysql=/usr/bin/mariadb_config && \
     make && make install
