@@ -4,7 +4,7 @@ type: kubernetes
 
 steps:
 - name: build
-  image: plugins/docker
+  image: plugins/docker:20.10
   pull: always
   settings:
     repo: rkojedzinszky/kea

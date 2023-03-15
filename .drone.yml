@@ -9,7 +9,7 @@ platform:
   os: linux
   variant: v8
 steps:
-- image: plugins/docker
+- image: plugins/docker:20.10
   name: build
   privileged: true
   pull: always
@@ -38,7 +38,7 @@ platform:
   os: linux
   variant: v7
 steps:
-- image: plugins/docker
+- image: plugins/docker:20.10
   name: build
   privileged: true
   pull: always
@@ -66,7 +66,7 @@ platform:
   arch: amd64
   os: linux
 steps:
-- image: plugins/docker
+- image: plugins/docker:20.10
   name: build
   privileged: true
   pull: always
