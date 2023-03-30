@@ -36,6 +36,11 @@ parse_db_args()
 		kea_admin_args="$kea_admin_args -h $host"
 	fi
 
+	local port=$(echo "$db" | jq -r ".port")
+	if [ -n "$port" ]; then
+		kea_admin_args="$kea_admin_args -P $port"
+	fi
+
 	local name=$(echo "$db" | jq -r ".name")
 	if [ -n "$name" ]; then
 		kea_admin_args="$kea_admin_args -n $name"
