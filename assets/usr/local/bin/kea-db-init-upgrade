@@ -31,27 +31,27 @@ parse_db_args()
 		;;
 	esac
 
-	local host=$(echo "$db" | jq -r ".host")
+	local host=$(echo "$db" | jq -r ".host | select(.)")
 	if [ -n "$host" ]; then
 		kea_admin_args="$kea_admin_args -h $host"
 	fi
 
-	local port=$(echo "$db" | jq -r ".port")
+	local port=$(echo "$db" | jq -r ".port | select(.)")
 	if [ -n "$port" ]; then
 		kea_admin_args="$kea_admin_args -P $port"
 	fi
 
-	local name=$(echo "$db" | jq -r ".name")
+	local name=$(echo "$db" | jq -r ".name | select(.)")
 	if [ -n "$name" ]; then
 		kea_admin_args="$kea_admin_args -n $name"
 	fi
 
-	local user=$(echo "$db" | jq -r ".user")
+	local user=$(echo "$db" | jq -r ".user | select(.)")
 	if [ -n "$user" ]; then
 		kea_admin_args="$kea_admin_args -u $user"
 	fi
 
-	local password=$(echo "$db" | jq -r ".password")
+	local password=$(echo "$db" | jq -r ".password | select(.)")
 	if [ -n "$password" ]; then
 		kea_admin_args="$kea_admin_args -p $password"
 	fi
