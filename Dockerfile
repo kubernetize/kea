@@ -1,4 +1,4 @@
-FROM alpine:3.19.1
+FROM alpine:3.20.2
 
 LABEL \
     org.opencontainers.image.authors="Richard Kojedzinszky <richard@kojedz.in>" \
@@ -18,3 +18,7 @@ ADD assets/ /
 USER 27489
 
 EXPOSE 67/udp
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+CMD ["/usr/sbin/kea-dhcp4", "-c", "/etc/kea/kea-dhcp4.conf"]
