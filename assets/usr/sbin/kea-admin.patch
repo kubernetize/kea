@@ -1,0 +1,11 @@
+--- kea-admin.orig
++++ kea-admin
+@@ -423,7 +423,7 @@
+     for script in ${upgrade_scripts}
+     do
+         echo "Processing $script file..."
+-        "${script}" -U "${db_user}" -h "${db_host}" \
++        "${script}" -U "${db_user}" -h "${db_host}" ${db_port_full_parameter-} \
+         -d "${db_name}" ${extra_arguments}
+     done
+

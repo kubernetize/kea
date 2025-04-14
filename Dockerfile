@@ -5,15 +5,16 @@ LABEL \
     org.opencontainers.image.title="ISC KEA dhcp server" \
     org.opencontainers.image.description="ISC KEA dhcp server"
 
+ADD assets/ /
+
 RUN adduser -u 27489 -D -H kea && \
     mkdir /var/lib/kea /var/run/kea && chown kea:kea /var/lib/kea /var/run/kea && \
     apk --no-cache add jq kea-dhcp4 kea-dhcp6 kea-admin postgresql-client mariadb-client && \
-    apk --no-cache add -t cap libcap && \
+    apk --no-cache add -t setup libcap patch && \
+    cd /usr/sbin && patch -p0 < kea-admin.patch && cd / && \
     setcap cap_net_bind_service=+ep /usr/sbin/kea-dhcp4 && \
     setcap cap_net_bind_service=+ep /usr/sbin/kea-dhcp6 && \
-    apk --no-cache del cap
-
-ADD assets/ /
+    apk --no-cache del setup
 
 USER 27489
 
