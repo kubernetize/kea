@@ -9,5 +9,3 @@ while ! kea-db-init-upgrade ; do
 	r=$((r-1))
 	sleep 1
 done
-
-exec "$@"
