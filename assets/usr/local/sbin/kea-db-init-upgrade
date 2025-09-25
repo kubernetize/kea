@@ -1,13 +1,11 @@
 #!/bin/sh
 
-: ${KEA_CONF=/etc/kea/kea-dhcp4.conf}
-
 if [ -n "$1" ]; then
-	KEA_CONF="$1"
+	KEA_CONFIG="$1"
 fi
 
-if [ ! -f "$KEA_CONF" ]; then
-	echo "[-] Kea config ($KEA_CONF) could not be read."
+if [ ! -f "$KEA_CONFIG" ]; then
+	echo "[-] Kea config ($KEA_CONFIG) could not be read."
 	exit 1
 fi
 
@@ -57,7 +55,7 @@ parse_db_args()
 	fi
 }
 
-parse_db_args "$KEA_CONF"
+parse_db_args "$KEA_CONFIG"
 
 dbver=$(kea-admin db-version $kea_admin_args 2>/dev/null)
 if [ $? -ne 0 ]; then
