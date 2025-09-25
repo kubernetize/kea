@@ -1,6 +1,6 @@
 # kea
 
-Rootless Kea from Alpine with `CAP_NET_BIND_SERVICE` set on binary.
+Rootless Kea image built from Alpine.
 
 ## Startup
 
