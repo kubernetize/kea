@@ -10,3 +10,5 @@ arg | KEA_CONFIG default value | Final command
 -|-|-
 /dhcp4 | /etc/kea/kea-dhcp4.conf | /usr/sbin/kea-dhcp4 -c "${KEA_CONFIG}"
 /dhcp6 | /etc/kea/kea-dhcp6.conf | /usr/sbin/kea-dhcp6 -c "${KEA_CONFIG}"
+
+Additionally, if the configuration file at `${KEA_CONFIG}` does not exist, but `${KEA_CONFIG}.yaml` does, then a yaml to json conversion takes place.
