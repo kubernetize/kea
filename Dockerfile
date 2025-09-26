@@ -1,4 +1,4 @@
-FROM ghcr.io/kubernetize/alpine-service-base
+FROM ghcr.io/kubernetize/alpine-service-base:3.22.1
 
 LABEL \
     org.opencontainers.image.authors="Richard Kojedzinszky <richard@kojedz.in>" \
